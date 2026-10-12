@@ -7,7 +7,7 @@ import { Icon, PartArt, ControlArt } from './Artwork';
 
 const sections = {
   automation: { name: 'PLC و HMI', description: 'برنامه‌نویسی و اتوماسیون صنعتی', action: 'خدمات و تجهیزات', icon: 'chip' },
-  manufacturing: { name: 'طراحی و ساخت قطعات', description: 'طراحی و تولید قطعات صنعتی', action: 'نمونه‌کارها و قطعات', icon: 'cube' },
+  manufacturing: { name: 'محمد کسایی', description: 'طراحی و تولید قطعات صنعتی', action: 'نمونه‌کارها', icon: 'cube' },
 };
 const SectionContext = createContext(null);
 const getRoute = () => {
@@ -18,7 +18,8 @@ const getRoute = () => {
 
 function Brand() {
   const section = useContext(SectionContext);
-  return <a href={section ? `#${section}` : '#home'} className="brand" aria-label="مجموعهٔ مهندسی، صفحهٔ اصلی"><span className="brand-mark"><Icon name={section ? sections[section].icon : 'cube'} size={29}/></span><span>مجموعهٔ مهندسی<small>{section ? sections[section].description : 'بخش موردنظر خود را انتخاب کنید'}</small></span></a>;
+  const name = section === 'manufacturing' ? 'محمد کسایی' : 'مهیار خرده‌فروش';
+  return <a href={section ? `#${section}` : '#home'} className="brand" aria-label={`${name}، صفحهٔ اصلی`}><span className="brand-mark"><Icon name={section ? sections[section].icon : 'cube'} size={29}/></span><span>{name}</span></a>;
 }
 
 function Header({ route }) {
@@ -51,31 +52,35 @@ function SampleNote() {
 }
 
 function Entry() {
-  return <div className="entry-page"><header className="container entry-header"><Brand/><span className="overline">TWO DISCIPLINES. ONE TEAM.</span></header><section className="container entry-content"><div className="entry-heading"><p className="eyebrow">به مجموعهٔ مهندسی خوش آمدید</p><h1>در کدام بخش<br/><span>می‌توانیم همراه شما باشیم؟</span></h1><p>حوزهٔ موردنظرتان را انتخاب کنید تا وارد فضای تخصصی همان بخش شوید.</p></div><div className="entry-options">{Object.entries(sections).map(([id, info], index) => <a href={`#${id}`} key={id} className="entry-option"><div className="entry-option-top"><span className="icon-box"><Icon name={info.icon} size={26}/></span><span className="index-label">0{index + 1} / {id === 'automation' ? 'AUTOMATION' : 'MANUFACTURING'}</span></div><div className="entry-art">{id === 'automation' ? <ControlArt/> : <PartArt/>}</div><h2>{info.name}</h2><p>{id === 'automation' ? 'خدمات برنامه‌نویسی، برندها و مدل‌های تجهیزات کنترل و رابط‌های اپراتوری.' : 'نمونه‌کارها، مشخصات فنی قطعات، فرایند ساخت و مستندات پروژه‌ها.'}</p><div className="entry-action"><span>ورود به بخش {id === 'automation' ? 'اتوماسیون' : 'قطعات'}</span><span className="arrow-box"><Icon/></span></div></a>)}</div></section><footer className="container entry-footer"><span>مجموعهٔ مهندسی · طراحی، تولید و اتوماسیون</span><span>دو حوزهٔ تخصصی، یک نگاه مهندسی</span></footer></div>;
+  return <div className="entry-page"><header className="container entry-header" aria-hidden="true"/><section className="container entry-content"><div className="entry-options">{Object.entries(sections).map(([id, info], index) => <a href={`#${id}`} key={id} className="entry-option"><div className="entry-option-top"><span className="icon-box"><Icon name={info.icon} size={26}/></span><span className="index-label">0{index + 1} / {id === 'automation' ? 'AUTOMATION' : 'MANUFACTURING'}</span></div><div className="entry-art">{id === 'automation' ? <ControlArt/> : <PartArt/>}</div><h2>{id === 'manufacturing' ? 'طراحی و ساخت قطعات' : info.name}</h2><p>{id === 'automation' ? 'خدمات برنامه‌نویسی، برندها و مدل‌های تجهیزات کنترل و رابط‌های اپراتوری.' : 'نمونه‌کارها، مشخصات فنی قطعات، فرایند ساخت و مستندات پروژه‌ها.'}</p><div className="entry-action"><span>ورود به بخش {id === 'automation' ? 'اتوماسیون' : 'قطعات'}</span><span className="arrow-box"><Icon/></span></div></a>)}</div></section><footer className="container entry-footer" aria-hidden="true"/></div>;
 }
 function ProjectCard({ project, onSelect }) {
   return <button className="project-card" onClick={() => onSelect(project)} aria-label={`مشخصات ${project.name}`}><div className="project-image"><span className="sample-tag">طرح نمایشی</span><PartArt type={project.shape}/></div><div className="project-info"><span className="eyebrow">{project.label}</span><h3>{project.name}</h3><div className="project-meta"><span>مشاهدهٔ مشخصات فنی</span><Icon size={19}/></div></div></button>;
 }
-function PageHeading({ label, title, description }) {
-  const section = useContext(SectionContext);
-  return <div className="page-heading"><a href={`#${section}`} className="breadcrumb">{sections[section].name} <span>/</span> {label}</a><p className="eyebrow">{label}</p><h1>{title}</h1><p>{description}</p></div>;
+function PageHeading({ title, description }) {
+  return <div className="page-heading"><h1>{title}</h1><p>{description}</p></div>;
 }
 function Filters({ options, value, onChange, label }) { return <div className="filters" role="group" aria-label={label}>{options.map(([id, text]) => <button key={id} className={value === id ? 'active' : ''} aria-pressed={value === id} onClick={() => onChange(id)}>{text}</button>)}</div>; }
 function Documents() { return <section className="documents-panel"><span className="icon-box"><Icon name="file" size={28}/></span><div><h2>کاتالوگ و مستندات فنی</h2><p>فایل‌های معرفی مجموعه و مدارک قابل انتشار پروژه‌ها.</p>{documents.length > 0 && <div className="document-links">{documents.map(d => <a key={d.file} href={d.file} target="_blank" rel="noreferrer">{d.title} <Icon name="diagonal" size={16}/></a>)}</div>}</div>{documents.length === 0 && <span className="status-label">هنوز فایلی اضافه نشده</span>}</section>; }
 function Manufacturing({ onSelect }) {
   const [filter, setFilter] = useState('all');
   const projects = data.projects.filter(p => filter === 'all' || p.type === filter);
-  return <section className="container inner-page"><PageHeading label="طراحی و تولید قطعات" title="هر قطعه، پاسخ یک نیاز." description="از مدل‌سازی و نقشهٔ فنی تا فرایند ساخت؛ جزئیات هر پروژه را دنبال کنید."/><SampleNote/><SectionTitle eyebrow="نمونه‌کارها" title="گالری قطعات"><Filters label="فیلتر نمونه‌کارها" options={[["all","همه"],["machining","ماشین‌کاری"],["design","طراحی و ساخت"]]} value={filter} onChange={setFilter}/></SectionTitle><div className="projects-grid" aria-live="polite">{projects.map(p => <ProjectCard key={p.id} project={p} onSelect={onSelect}/>)}</div><Documents/></section>;
+  return <section className="container inner-page"><PageHeading label="طراحی و تولید قطعات" title="هر قطعه، پاسخ یک نیاز." description="از مدل‌سازی و نقشهٔ فنی تا فرایند ساخت؛ جزئیات هر پروژه را دنبال کنید."/><SectionTitle eyebrow="نمونه‌کارها" title="نمونه‌کارها"><Filters label="فیلتر نمونه‌کارها" options={[["all","همه"],["machining","ماشین‌کاری"],["design","طراحی و ساخت"]]} value={filter} onChange={setFilter}/></SectionTitle><div className="projects-grid" aria-live="polite">{projects.map(p => <ProjectCard key={p.id} project={p} onSelect={onSelect}/>)}</div><Documents/></section>;
 }
 function Automation() {
   const [filter, setFilter] = useState('all');
   const brands = data.brands.filter(b => filter === 'all' || b[filter].length);
-  return <section className="container inner-page"><PageHeading label="PLC و HMI" title="منطق دقیق. کنترل یکپارچه." description="خدمات اتوماسیون صنعتی و خانواده‌های محصول، به تفکیک برند و نوع تجهیزات."/><div className="automation-intro"><div><span className="icon-box"><Icon name="chip"/></span><h2>برنامه‌نویسی PLC</h2><p>معرفی خدمات منطق کنترل، راه‌اندازی و عیب‌یابی؛ جزئیات خدمات پس از تأیید مجموعه تکمیل می‌شود.</p></div><div><span className="icon-box"><Icon name="cube"/></span><h2>طراحی و برنامه‌نویسی HMI</h2><p>معرفی رابط‌های اپراتوری، نمایش وضعیت دستگاه و مدیریت هشدارها؛ دامنهٔ خدمات در حال تکمیل است.</p></div><ControlArt/></div><SampleNote/><SectionTitle eyebrow="برندها و خانواده‌های محصول" title="تجهیزات و مدل‌ها"><Filters label="فیلتر تجهیزات" options={[["all","همه"],["plc","PLC"],["hmi","HMI"]]} value={filter} onChange={setFilter}/></SectionTitle><div className="brand-list" aria-live="polite">{brands.map(b => <article className="brand-row" key={b.name}><div className="equipment-brand"><h3 dir="ltr">{b.name}</h3><span>برند نمونه</span></div><div className="brand-models">{['plc','hmi'].filter(t => (filter === 'all' || filter === t) && b[t].length).map(t => <div className="model-row" key={t}><b>{t.toUpperCase()}</b>{b[t].map(model => <span key={model} dir="ltr">{model}</span>)}</div>)}</div><Icon name="chip" size={25}/></article>)}</div></section>;
+  return <section className="container inner-page"><PageHeading label="PLC و HMI" title="منطق دقیق. کنترل یکپارچه." description="خدمات اتوماسیون صنعتی و خانواده‌های محصول، به تفکیک برند و نوع تجهیزات."/><div className="automation-intro"><div><span className="icon-box"><Icon name="chip"/></span><h2>برنامه‌نویسی PLC</h2><p>معرفی خدمات منطق کنترل، راه‌اندازی و عیب‌یابی؛ جزئیات خدمات پس از تأیید مجموعه تکمیل می‌شود.</p></div><div><span className="icon-box"><Icon name="cube"/></span><h2>طراحی و برنامه‌نویسی HMI</h2><p>معرفی رابط‌های اپراتوری، نمایش وضعیت دستگاه و مدیریت هشدارها؛ دامنهٔ خدمات در حال تکمیل است.</p></div><ControlArt/></div><SectionTitle eyebrow="برندها و خانواده‌های محصول" title="تجهیزات و مدل‌ها"><Filters label="فیلتر تجهیزات" options={[["all","همه"],["plc","PLC"],["hmi","HMI"]]} value={filter} onChange={setFilter}/></SectionTitle><div className="brand-list" aria-live="polite">{brands.map(b => <article className="brand-row" key={b.name}><div className="equipment-brand"><h3 dir="ltr">{b.name}</h3></div><div className="brand-models">{['plc','hmi'].filter(t => (filter === 'all' || filter === t) && b[t].length).map(t => <div className="model-row" key={t}><b>{t.toUpperCase()}</b>{b[t].map(model => <span key={model} dir="ltr">{model}</span>)}</div>)}</div><Icon name="chip" size={25}/></article>)}</div></section>;
 }
 function Partners() {
   const section = useContext(SectionContext);
   const info = sections[section];
-  return <section className="container inner-page"><PageHeading label="شرکت‌های همکار" title="همکاری، آغاز یک نتیجهٔ بهتر." description={`معرفی شرکت‌های همکار در حوزهٔ ${info.name} و پروژه‌های مرتبط با همین بخش.`}/><div className="empty-state"><span className="icon-box"><Icon name="people" size={35}/></span><h2>همکاری‌های این بخش به‌زودی معرفی می‌شوند</h2><p>نام و لوگوی شرکت‌ها پس از دریافت اطلاعات واقعی در این بخش قرار می‌گیرد.</p><a href={`#${section}`} className="button">{info.action} <Icon/></a></div></section>;
+  const partners = [
+    { name: 'فراز کنترل', field: 'اتوماسیون صنعتی', product: 'تابلوهای کنترل و تجهیزات PLC', image: '/images/partner-automation.png' },
+    { name: 'صنعت‌سازان نوین', field: 'ساخت و ماشین‌کاری', product: 'قطعات دقیق و مجموعه‌های صنعتی', image: '/images/partner-machining.png' },
+    { name: 'پارس ابزار دقیق', field: 'ابزار دقیق و کنترل', product: 'HMI، سنسور و تجهیزات مانیتورینگ', image: '/images/partner-controls.png' },
+  ];
+  return <section className="container inner-page"><PageHeading label="شرکت‌های همکار" title="همکاران منتخب" description={`نمونه‌ای از همکاران فعال در حوزهٔ ${info.name}.`}/>{section === 'manufacturing' ? <div className="manufacturing-partner-grid">{partners.map(partner => <article className="manufacturing-partner-card" key={partner.name}><img src={partner.image} alt={`محیط کاری ${partner.name}`} loading="lazy"/><div><span className="eyebrow">{partner.field}</span><h2>{partner.name}</h2><p>{partner.product}</p></div></article>)}</div> : <div className="partner-grid">{partners.map(partner => <article className="partner-card" key={partner.name}><div className="partner-details"><span className="eyebrow">{partner.field}</span><h2>{partner.name}</h2><dl><div><dt>حوزهٔ فعالیت</dt><dd>{partner.field}</dd></div><div><dt>محصولات و خدمات</dt><dd>{partner.product}</dd></div></dl></div><img src={partner.image} alt={`محیط کاری ${partner.name}`} loading="lazy"/></article>)}</div>}</section>;
 }
 function About() {
   const section = useContext(SectionContext);
@@ -107,7 +112,7 @@ function App() {
   if (section) {
     content = page === 'partners' ? <Partners/> : page === 'about' ? <About/> : section === 'automation' ? <Automation/> : <Manufacturing onSelect={setProject}/>;
   }
-  return <SectionContext.Provider value={section}><a className="skip-link" href="#content" onClick={event => { event.preventDefault(); main.current.focus(); main.current.scrollIntoView(); }}>رفتن به محتوای اصلی</a>{section && <><div className="site-topline"><div className="container"><span>{sections[section].description}</span><span dir="ltr">PRECISION · DESIGN · CONTROL</span></div></div><Header route={route}/></>}<main id="content" ref={main} tabIndex={-1} key={route}>{content}</main>{section && <Footer/>}<ProjectDialog project={project} onClose={() => setProject(null)}/></SectionContext.Provider>;
+  return <SectionContext.Provider value={section}><a className="skip-link" href="#content" onClick={event => { event.preventDefault(); main.current.focus(); main.current.scrollIntoView(); }}>رفتن به محتوای اصلی</a>{section && <Header route={route}/>}<main id="content" ref={main} tabIndex={-1} key={route}>{content}</main><ProjectDialog project={project} onClose={() => setProject(null)}/></SectionContext.Provider>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
